@@ -22,13 +22,14 @@ flowchart LR
     H --> I[Serving and monitoring]
 ```
 
-## The three projects
+## The four projects
 
 | Project | What you learn | Command |
 |---|---|---|
 | 01 — Experiment tracking | parameters, metrics, tags, artifacts, model signatures | `python projects/01_track_experiment.py` |
 | 02 — Model comparison | repeatable comparison, leaderboard, selection tags | `python projects/02_compare_models.py` |
 | 03 — Model registry | versions, tags, `candidate` and `champion` aliases | `python projects/03_registry_aliases.py --promote` |
+| 04 — Quality gate | validation policy, regression checks, promotion report | `python projects/04_quality_gate.py --promote` |
 
 ## Quick start
 
@@ -49,7 +50,8 @@ Open `http://127.0.0.1:5000`. Run the other projects in a second terminal while 
 3. Change one hyperparameter and explain the new run before comparing it.
 4. Run project 02 and inspect `reports/leaderboard.csv`.
 5. Run project 03 first without and then with `--promote`.
-6. Complete the exercises at the end of either course.
+6. Run project 04, inspect `reports/promotion-report.json`, and deliberately make a threshold fail.
+7. Complete the exercises at the end of either course.
 
 ## Scope and honest limitations
 

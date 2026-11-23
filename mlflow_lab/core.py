@@ -105,3 +105,34 @@ def write_leaderboard(rows: list[dict[str, Any]], destination: Path) -> pd.DataF
     destination.parent.mkdir(parents=True, exist_ok=True)
     frame.to_csv(destination, index=False)
     return frame
+
+
+def evaluate_promotion(
+    candidate: dict[str, float],
+    champion: dict[str, float] | None = None,
+    *,
+    min_f1: float = 0.90,
+    min_recall: float = 0.90,
+    max_f1_regression: float = 0.01,
+) -> dict[str, Any]:
+    """Apply an explicit, testable policy before promoting a model."""
+    checks = {
+        "minimum_f1": candidate["f1"] >= min_f1,
+        "minimum_recall": candidate["recall"] >= min_recall,
+    }
+    if champion is not None:
+        checks["f1_regression_limit"] = (
+            candidate["f1"] >= champion["f1"] - max_f1_regression
+        )
+
+    return {
+        "approved": all(checks.values()),
+        "checks": checks,
+        "candidate": candidate,
+        "champion": champion,
+        "policy": {
+            "min_f1": min_f1,
+            "min_recall": min_recall,
+            "max_f1_regression": max_f1_regression,
+        },
+    }

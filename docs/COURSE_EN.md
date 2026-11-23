@@ -42,11 +42,17 @@ Run `python projects/03_registry_aliases.py`. It registers a model version, assi
 
 An alias is useful because inference code can load `models:/cancer-risk-classifier@champion` while promotion changes the target centrally. Promotion should follow checks; this lab makes the decision explicit but does not pretend to implement a full approval system.
 
-## 6. Local versus team architecture
+## 6. Project 04 — automated quality gate
+
+Run `python projects/04_quality_gate.py` to train and register a candidate without changing the production alias. The policy checks absolute F1 and recall thresholds. When a champion already exists, it also blocks an unacceptable F1 regression. The complete decision is logged as a JSON artifact, so a reviewer can see why the candidate passed or failed.
+
+Run again with `--promote`. The `champion` alias moves only when every check passes. Try `--min-f1 0.99 --promote` to observe a blocked release. This pattern turns promotion from an informal choice into a testable policy. A real system would add latency, fairness, data-quality and security checks and would run the gate in a protected deployment workflow.
+
+## 7. Local versus team architecture
 
 This lab uses SQLite and local artifacts. It is simple and reproducible for one learner. A team commonly runs a tracking server, stores metadata in a managed database, stores artifacts in object storage, and protects the service with authentication and network controls.
 
-## 7. Common mistakes
+## 8. Common mistakes
 
 - Logging a score without the dataset/version that produced it.
 - Logging a model without a signature and input example.
@@ -55,7 +61,7 @@ This lab uses SQLite and local artifacts. It is simple and reproducible for one 
 - Committing `mlflow.db`, `mlruns`, or model artifacts to Git.
 - Moving a production alias without validation and rollback criteria.
 
-## 8. Exercises
+## 9. Exercises
 
 1. Add ROC AUC and explain when it is more useful than accuracy.
 2. Add a third candidate model and keep the comparison deterministic.
@@ -64,7 +70,6 @@ This lab uses SQLite and local artifacts. It is simple and reproducible for one 
 5. Add a test that rejects promotion below a chosen F1 threshold.
 6. Replace local artifacts with object storage in a separate deployment branch.
 
-## 9. Completion checklist
+## 10. Completion checklist
 
 You understand the lab when you can explain every logged field, reproduce a run, justify a selection policy, load a model by alias, and describe what is still missing for production.
-
