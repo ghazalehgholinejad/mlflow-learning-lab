@@ -16,7 +16,7 @@ def test_dataset_split_is_deterministic():
 
 
 def test_training_logs_metrics_model_and_artifact(tmp_path: Path):
-    tracking_uri = (tmp_path / "mlruns").as_uri()
+    tracking_uri = f"sqlite:///{tmp_path / 'mlflow.db'}"
     result = train_and_log(
         make_pipeline(StandardScaler(), LogisticRegression(max_iter=1000, random_state=42)),
         "test-model",
@@ -29,4 +29,3 @@ def test_training_logs_metrics_model_and_artifact(tmp_path: Path):
     assert 0.0 <= run.data.metrics["f1"] <= 1.0
     assert run.data.tags["dataset"] == "sklearn-breast-cancer"
     assert mlflow.pyfunc.load_model(result["model_uri"]).predict(result["input_example"]).shape == (3,)
-
